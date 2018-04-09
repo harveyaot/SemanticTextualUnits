@@ -3,27 +3,35 @@ import requests
 import lxml.html as lh
 from lxml import etree
 import re
+import urllib2
 import redis
 
-text_tag_pat = re.compile('^p$|^h[\d]{1}$|^b$|^br$')
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
+#text_tag_pat = re.compile('^p$|^h[\d]{1}$|^b$|^br$')
+text_tag_pat = re.compile('^p$|^h[\d]{1}$')
 conn = redis.StrictRedis()
-
 
 def cache(func):
     def __wrapper__(url):
         if conn.get(url):
             html = conn.get(url)
         else:
+            print "new request"
             html = func(url)
+            conn.set(url, html)
+        with open('tmp.html', 'w') as fout:
+            fout.write(html)
         return html
     return __wrapper__
 
-
 @cache
 def get_html(url):
-    resp = requests.get(url)
-    html = resp.text
+    #resp = requests.get(url)
+    resp = urllib2.urlopen(url)
+    html = resp.read()
+    html = html.decode('utf-8').encode('utf-8')
     return html
 
 def get_title(html):
@@ -45,10 +53,6 @@ def get_body_html(html):
 def split_into_stus(html):
     """ split the body_html into sementic textual units"""
     root = lh.fromstring(html)
-    #print all tags to check
-    #BFS to traverse
-    #BFS_traverse(body)
-    #DFS_traverse(body)
     divs = []
     DFS_traverse_for_stats(root, divs=divs)
     divs = sorted(divs, key=lambda x:x[1], reverse=True)
@@ -57,8 +61,8 @@ def split_into_stus(html):
     thres = 0 
     if len(divs) > 0:
         thres = divs[0][1]
-    DFS_traverse_for_label(root, thres=thres) 
     new_html = etree.tostring(root)
+    DFS_traverse_for_label(root, thres=thres) 
     with open('tmp2.html', 'w') as fout:
         fout.write(new_html)
 
