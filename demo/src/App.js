@@ -25,7 +25,7 @@ class Form extends Component{
   }
 
   randomUrl(type){
-    axios.get("http://stcvm-linux22:5903/random_one?type=" + type).then((res) => 
+    axios.get("/random_one?type=" + type).then((res) => 
         {
           this.setState({"url":res.data.url});
           this.input.value = res.data.url;
@@ -34,7 +34,7 @@ class Form extends Component{
   }
 
   updateStatistic(){
-    axios.get("http://stcvm-linux22:5903/statistic").then((res) => 
+    axios.get("/statistic").then((res) => 
         {
           this.setState({"total_num":res.data.total_num,
                         "judged_num":res.data.judged_num
@@ -82,6 +82,8 @@ class Form extends Component{
           <input type="button" value="RandomUrl(Judged)" onClick={()=>this.randomUrl(1)}/>
         </div>
         <div class="buttons">
+          Signature:
+          <input type="text" ref="signature"/>
           <input type="button" value="SaveJudge" onClick={this.props.handleSaveJudge}/>
           <input type="button" value="LoadJudge" onClick={this.props.handleLoadJudge}/>
         </div>
@@ -115,7 +117,7 @@ class App extends Component {
         return 
     }
     var json_d = {"url":this.state.url}
-    axios.post("http://stcvm-linux22:5903/load_judge", json_d, headers).then(
+    axios.post("/load_judge", json_d, headers).then(
       (res) =>{
           if (res.data.textunits !== null){
               this.setState({"textunits":res.data.textunits, 
@@ -130,61 +132,67 @@ class App extends Component {
         alert("Null Url") 
         return 
     }
-    //var data = JSON.stringify(this.refs.textunits.textunits_labels);
-    var json_d = {"url":this.state.url, "textunits":this.state.textunits, "labels":this.refs.textunits.labels}
-    axios.post("http://stcvm-linux22:5903/save_judge", json_d, headers).then(
-      (res) =>{
-          res.data.success?
-          alert("Succeed!"):
-          alert("Failed")
-          this.refs.form.updateStatistic()
+      //var data = JSON.stringify(this.refs.textunits.textunits_labels);
+      //verify the judge first 
+      var judgeName = this.refs.form.refs.signature.value
+      if (!judgeName){
+        alert("[Failed] Please Sign Your Name First!")
+        return
       }
+      var json_d = {"url":this.state.url, "textunits":this.state.textunits, "labels":this.refs.textunits.labels, "judge":judgeName}
+      axios.post("/save_judge", json_d, headers).then(
+          (res) =>{
+              res.data.success?
+                  alert("[Succeed] with name " + judgeName + "."):
+                  alert("[Failed] please contact the dev.")
+              this.refs.form.updateStatistic()
+          }
 
       )
   }
 
-  handleUrlChange = (url) => {
-    this.setState({url:url})
-  }
+    handleUrlChange = (url) => {
+        this.setState({url:url})
+    }
 
-  handleFormChange = (url) => {
-    var headers = {
-             'Content-Type': 'application/json',
-    }      
-    var data = {url:url}
-    axios.post("http://stcvm-linux22:5903/summary", data, headers)
-     .then(
-         res => {
+    handleFormChange = (url) => {
+        var headers = {
+            'Content-Type': 'application/json',
+        }      
+        var data = {url:url}
+        axios.post("/summary", data, headers)
+            .then(
+                res => {
 
-                  this.setState({paragraphs: res.data.paragraphs,
-                  textunits:res.data.textunits,
-                  summary:res.data.summary,
-                  url:url,
-                  labels:null,
-                  judged_num:res.data.judged_num,
-                  total_num:res.data.total_num
-              });
-         }
-     ).catch(err => {
-         console.log(err);
-     });
-  }
+                    this.setState({paragraphs: res.data.paragraphs,
+                        textunits:res.data.textunits,
+                        summary:res.data.summary,
+                        url:url,
+                        labels:null,
+                        judged_num:res.data.judged_num,
+                        total_num:res.data.total_num
+                    });
+                }
+            ).catch(err => {
+                console.log(err);
+            });
+    }
 
-  handleShowHide = (event) => {
-    this.setState({show_boilerplate: !this.state.show_boilerplate})
-  }
+    handleShowHide = (event) => {
+        this.setState({show_boilerplate: !this.state.show_boilerplate})
+    }
 
-  render() {
-    return (
-      <Grid>
-        <Row>
+    render() {
+        return (
+            <Grid>
+            <Row>
             <h2 class='headline'> Deep Comparison</h2>
             <Form handleFormChange={this.handleFormChange} 
-                  handleUrlChange={this.handleUrlChange} 
-                  handleShowHide={this.handleShowHide}
-                  handleSaveJudge={this.handleSaveJudge}
-                  handleLoadJudge={this.handleLoadJudge}
-                  ref="form"
+            handleUrlChange={this.handleUrlChange} 
+            handleShowHide={this.handleShowHide}
+            handleSaveJudge={this.handleSaveJudge}
+            handleLoadJudge={this.handleLoadJudge}
+            ref="form"
             />
         </Row>
         <Row>

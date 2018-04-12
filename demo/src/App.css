@@ -32,7 +32,6 @@ p {
 }
 
 .good{
-  #background-color:rgb(215, 244, 66);
   background-color:rgb(244, 244, 66);
 }
 
@@ -60,6 +59,7 @@ p {
 
 div.textunit{
   background-color:#41f4e5;
+  margin:0 0 1px;
 }
 
 div.summary{

@@ -4,6 +4,7 @@ import justext
 import sys
 import re
 import lxml.html as lh
+import lxml
 
 from textunit import TextUnit
 from collections import namedtuple
@@ -12,9 +13,22 @@ from json import JSONEncoder
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import wordpunct_tokenize
 
+from sys import version_info                                                                   
+                                                                                               
+PY3 = version_info[0] == 3                                                                     
+if PY3:                                                                                        
+    bytes = bytes                                                                              
+    unicode = str                                                                              
+else:                                                                                          
+    bytes = str                                                                                
+    unicode = unicode                                                                          
+string_types = (bytes, unicode,)                                                               
+                                   
 PARAGRAPHS_NUM_MAX = 5
 PARAGRAPHS_NUM_MIN = 0
 TOPICS_NUM_MAX = 5
+DEFAULT_ENCODING="utf8"
+DEFAULT_ENC_ERRORS = 'replace'
 
 SubTopic = namedtuple('SubTopic', ['topic', 'content'])
 Summary = namedtuple('Summary', ['title', 'subtopics'])
@@ -28,6 +42,24 @@ pat_artical = re.compile("(^a |^an |^the )", re.IGNORECASE)
 #db_pat = re.compile("difference.*between.*", re.IGNORECASE)
 other_pat = re.compile("(.*?) +vs +(\S+.*)|(.*?) +or +(\S+.*)|(.*?) +and +(\S+.*)", re.IGNORECASE)
 keywords = frozenset(['whereas', 'while', 'but', 'however', 'more', 'than', 'much', 'where'])
+
+def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
+    """Converts HTML to DOM."""
+    if isinstance(html, unicode):
+        decoded_html = html
+        # encode HTML for case it's XML with encoding declaration
+        forced_encoding = encoding if encoding else default_encoding
+        html = html.encode(forced_encoding, errors)
+    else:
+        decoded_html = decode_html(html, default_encoding, encoding, errors)
+
+    try:
+        dom = lxml.html.fromstring(decoded_html, parser=lxml.html.HTMLParser())
+    except ValueError:
+        # Unicode strings with encoding declaration are not supported.
+        # for XHTML files with encoding declaration, use the declared encoding
+        dom = lxml.html.fromstring(html, parser=lxml.html.HTMLParser())
+    return dom 
 
 def splitParagraph(p):
     sents = sent_tokenize(p.text)
@@ -159,9 +191,10 @@ def summary2dict(s):
                     v[i] = sub_v.__dict__
     return d
 
+
 def extract_title(html):
     title = None
-    doc = lh.fromstring(html)
+    doc = html_to_dom(html)
     elements = doc.xpath('//title')
     if elements:
         title = elements[0].text

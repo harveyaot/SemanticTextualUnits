@@ -20,7 +20,8 @@ def prepare_webs():
 
 webs = prepare_webs()
 save_judge_redis = redis.StrictRedis(redis_host, redis_port, db=db)
-golden_docs = webs.find({'is_golden':True})
+#golden_docs = webs.find({'is_golden':True})
+golden_docs = webs.find()
 
 def get_web_by_url(url, webs):
     web = None
@@ -29,7 +30,7 @@ def get_web_by_url(url, webs):
         return web
     try:
         resp = requests.get(url)
-        print >> sys.stderr, '[New Request] %s' % url
+        print('[New Request] %s' % url, file=sys.stderr)
         content = resp.content
         web = {
                 'url': url,
@@ -39,7 +40,7 @@ def get_web_by_url(url, webs):
              }
         save_web_to_mongo(web, webs)
     except Exception as e:
-        print >> sys.stderr, e
+        print(e, file=sys.stderr)
         pass
     return web
 
@@ -52,9 +53,9 @@ def save_web_to_mongo(web, webs):
 def test_get_save():
     url = "https://www.forbes.com/sites/gordonkelly/2018/01/07/iphone-x-vs-iphone-8-vs-iphone-8-plus-whats-the-difference"
     web = get_web_by_url(url, webs)
-    print "[web] is", web
+    print("[web] is", web)
     post_id = save_web_to_mongo(web, webs)
-    print "[post_id] is", post_id
+    print("[post_id] is", post_id)
 
 
 if __name__ == "__main__":
