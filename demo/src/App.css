@@ -22,6 +22,7 @@
   font-size: large;
 }
 
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -73,11 +74,30 @@ div.summary{
   color:rgb(48, 175, 229);
 }
 
-.stats{
-    border:none;
+
+.button {
+    background-color: #008CBA; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    margin: 4px 2px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-span:hover {
+.button2 {
+   -webkit-border-radius: 20px;
+   -moz-border-radius: 20px;
+   border-radius: 5px;
+   background-color:coral;
+}
+
+.button3 {
+  background-color:grey;
+}
+
+p span:hover {
   background-color : yellow
 }
 
@@ -85,7 +105,7 @@ p.summary{
   padding:5px;
 }
 
-form {
+.searchbar {
   text-align: center;
   font-size: 17px;
   padding-top:10px;
@@ -95,13 +115,36 @@ input {
   padding:5px;
 }
 
-.buttons{
-  text-align: center;
-  font-size: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
 .headline{
   text-align:center
+}
+
+select {
+   color: #fff;
+   background-color: coral;
+   -webkit-border-radius: 20px;
+   -moz-border-radius: 20px;
+   border-radius: 5px;
+   padding-left: 15px;
+}
+
+label {
+  margin:10px;
+  color:grey;
+  font-style:italic bold;
+}
+
+label.note{
+  color:grey;
+  font-size:8px;
+  font-style:italic;
+}
+
+.stats{
+  margin-top:10px;
+  font-size:12px;
+}
+
+.column-results{
+  margin-top:20px;
 }
