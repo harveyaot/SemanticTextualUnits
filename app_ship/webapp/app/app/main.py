@@ -27,14 +27,14 @@ DB = "comparison"
 collection = 'raw_web'
 
 mongo_host='localhost'
-mong_port=27017
+mongo_port=27016
 redis_host='localhost'
-redis_port=6379
+redis_port=6378
 db=5
 tags = ['golden', 'cellphone']
 
 def prepare_webs():
-    conn = pymongo.MongoClient(host=mongo_host, port=27017)
+    conn = pymongo.MongoClient(host=mongo_host, port=mongo_port)
     webs = conn[DB][collection]
     return webs 
 
