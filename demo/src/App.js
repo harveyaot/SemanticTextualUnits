@@ -6,15 +6,13 @@ import Paragraphs from './Paragraph.js'
 import axios from 'axios';
 import {Col, Row, Grid} from 'react-bootstrap'
 
-import Button from 'material-ui/Button';
-import Input from 'material-ui/Input'
 
 var headers = {
          'Content-Type': 'application/json',
 }      
 
-//var urlPrefix = "http://stcvm-linux22:5904"
-var urlPrefix = ""
+var urlPrefix = "http://stcvm-linux22:5904"
+//var urlPrefix = ""
 
 class Form extends Component{
   constructor(props){
