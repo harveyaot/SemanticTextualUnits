@@ -11,8 +11,8 @@ var headers = {
          'Content-Type': 'application/json',
 }      
 
-var urlPrefix = "http://stcvm-linux22:5904"
-//var urlPrefix = ""
+//var urlPrefix = "http://stcvm-linux22:5904"
+var urlPrefix = ""
 
 class Form extends Component{
   constructor(props){
