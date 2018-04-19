@@ -13,7 +13,8 @@ var headers = {
          'Content-Type': 'application/json',
 }      
 
-var urlPrefix = "http://stcvm-linux22:5904"
+//var urlPrefix = "http://stcvm-linux22:5904"
+var urlPrefix = ""
 
 class Form extends Component{
   constructor(props){
@@ -86,8 +87,7 @@ class Form extends Component{
                     <label>{"Judged#:" + this.state.stats.querysets[this.state.querysetIdx].judged}</label>
                     <button class="button button2" onClick={()=>this.randomUrl(0)}>RandomUrl(Unjudged)</button>
                     <br/>
-                    <label>Signature:</label>
-                    <input type="text" ref="signature" onChange={()=>{this.updateStatistic()}} style={{"width":"80px", "borderColor":"grey"}}/>
+                    <input type="text" placeholder="sign your name.." ref="signature" onChange={()=>{this.updateStatistic()}} style={{"width":"100px", borderColor: ""}}/>
                     <label>{"Judged_By_You#:" + this.state.stats.querysets[this.state.querysetIdx].judgedByYou}</label>
                     <button onClick={()=>this.randomUrl(1)} class="button button2">RandomUrl(Judged)</button>
                 </div>
