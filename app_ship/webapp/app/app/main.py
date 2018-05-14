@@ -137,7 +137,7 @@ def random_one():
         doc = webs.find({"is_%s"%tags[int(tag_idx)]:True,'judge_results.judge':signature})[random.randrange(judgeQueryNum)]
         url = doc['url'] if doc else None
     if url_type == 0 and queryNum > 0:
-        doc = webs.find({"is_%s"%tags[int(tag_idx)]:True, 'judge_resutls':None})[random.randrange(queryNum)]
+        doc = webs.find({"is_%s"%tags[int(tag_idx)]:True, 'judge_results':None})[random.randrange(queryNum)]
         url = doc['url'] if doc else None
     return json.dumps({'url': url})
 
