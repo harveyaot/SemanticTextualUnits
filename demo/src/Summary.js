@@ -10,7 +10,7 @@ class Summary extends Component{
           this.props.summary == null?
           null:
           (
-            <div class='summary'>
+            <div class='summary column-results'>
                 <p class='summary'>
                   <b>{this.props.summary.title}</b>
                 </p>

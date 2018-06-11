@@ -85,6 +85,7 @@ class TextUnit extends Component{
 class TextUnits extends Component{
     constructor(props){
         super(props)
+        this.props = props
         this.labels = []
         this.handleLabel=this.handleLabel.bind(this)
     }
@@ -114,9 +115,15 @@ class TextUnits extends Component{
         return (
             this.props.textunits === null?
             null:
-            this.props.textunits.map((tu, tidx) => (
-                <TextUnit key={this.props.url + "_" + Math.random() + "_"+ tidx}  textunit={tu} tidx={tidx} handleLabel={this.handleLabel} labels={this.labels}/> 
-            ))
+            <div class="column-results">
+                  <input type="button" class="button button3" value="SaveJudge" onClick={this.props.handleSaveJudge}/>
+                  <input type="button" class="button button3" value="ClearJudge" onClick={this.props.handleClearJudge}/>
+                  <label class='note'>{this.props.last_update? this.props.judge + "@" + new Date(this.props.last_update.$date).toUTCString():null}</label>
+
+                {this.props.textunits.map((tu, tidx) => (
+                    <TextUnit key={this.props.url + "_" + Math.random() + "_"+ tidx}  textunit={tu} tidx={tidx} handleLabel={this.handleLabel} labels={this.labels}/> 
+                ))}
+            </div>
         )
     }
 }

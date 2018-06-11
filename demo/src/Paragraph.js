@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 function ParagraphDetail(props){
   const showHideDetail = (idx, isToShow) => {
@@ -50,15 +50,28 @@ function ParagraphDetail(props){
     ) 
 }
 
-function Paragraphs(props){
-  return (
-        props.paragraphs == null?
-        null:
-        (
-          props.paragraphs.map((p, i) => 
-              <ParagraphDetail idx={i} p={p} show_boilerplate={props.show_boilerplate}/>
+class Paragraphs extends Component{
+  constructor(props){
+    super(props);
+    this.props = props;
+    this.state = {show:true}
+  }
+
+  render(){
+    return (
+          this.props.paragraphs == null?
+          null:
+          (
+            <div class='column-results'>
+              <input type="button" class="button button3"
+                      value={this.state.show? "HideBoilerPlate" : "ShowBoilerPlate"} 
+                      onClick={()=>{this.setState({'show': !this.state.show})}}/>
+              {this.props.paragraphs.map((p, i) => 
+                  <ParagraphDetail idx={i} p={p} show_boilerplate={this.state.show}/>
+              )}
+            </div>
           )
-        )
-  )
+    )
+  }
 }
 export default Paragraphs;

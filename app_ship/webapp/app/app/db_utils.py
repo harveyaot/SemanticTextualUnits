@@ -12,6 +12,8 @@ redis_host='stcgpu-20'
 redis_port='6379'
 db=5
 
+tags = ['golden', 'cellphone']
+
 
 def prepare_webs():
     conn = pymongo.MongoClient()

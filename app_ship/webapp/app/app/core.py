@@ -6,9 +6,11 @@ import re
 import lxml.html as lh
 import lxml
 
+
 from .textunit import TextUnit
 from collections import namedtuple
 from json import JSONEncoder
+from bson import json_util
 
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import wordpunct_tokenize
@@ -76,6 +78,27 @@ class SummaryMaker(object):
             if content:
                 subtopics.append(SubTopic(topic, content))
         summary = Summary(title, subtopics[:TOPICS_NUM_MAX])
+        return summary
+
+    @classmethod
+    def make_summary_by_judge(cls, title, json_ts, labels):
+        subtopics = []
+        for i, t in enumerate(labels):
+            # select subtopic
+            if t and t.get('label', False):
+                subtopic = json_ts[i]
+                topic_sent = subtopic['topic_paragraph']['text']
+                # to select sentence
+                content = ""
+                print (t.get('ps'))
+                for j, p in enumerate(t.get('ps', [])):
+                    if p:
+                        for k, sent in enumerate(p):
+                            if sent:
+                                content += " " + subtopic['paragraphs'][j]['sents'][k];
+                print(content)
+                subtopics.append(SubTopic(topic_sent, content))
+        summary = Summary(title, subtopics)
         return summary
 
     @classmethod
