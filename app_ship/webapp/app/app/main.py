@@ -24,14 +24,14 @@ random.seed(int(time.time()))
 app = Flask(__name__)
 CORS(app)
 DB = "comparison"
-collection = 'raw_web'
+collection = 'judge'
 
-mongo_host='localhost'
-mongo_port=27016
-redis_host='localhost'
-redis_port=6378
+mongo_host='mongo'
+mongo_port=27017
+redis_host='redis'
+redis_port=6379
 db=5
-tags = ['golden', 'cellphone']
+tags = ['golden', 'cellphone', 'review']
 
 def prepare_webs():
     conn = pymongo.MongoClient(host=mongo_host, port=mongo_port)
@@ -40,7 +40,8 @@ def prepare_webs():
 
 webs = prepare_webs()
 golden_docs = webs.find({'is_cellphone':True})
-#golden_num = webs.find({'is_cellphone':True}).count()
+golden_num = webs.find({'is_cellphone':True}).count()
+print ("[notice]", golden_num)
 save_judge_redis = redis.StrictRedis(redis_host, redis_port, db=db)
 
 def get_judges_num():
@@ -207,5 +208,5 @@ def preprocessor(dom):
     return cleaner.clean_html(dom)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5904)
+    app.run(host='0.0.0.0', port=8904)
     #print (statistic())
